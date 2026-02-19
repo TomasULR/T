@@ -1,0 +1,10 @@
+base_model: "google/gemma-2-2b-it"
+max_seq_length: 2048
+lora_rank: 16
+lora_alpha: 16
+epochs: 3
+batch_size: 2
+gradient_accumulation_steps: 4
+learning_rate: 0.0002
+quantization: "q4_k_m"
+finetuned_model_name: "gemma2-finetuned"

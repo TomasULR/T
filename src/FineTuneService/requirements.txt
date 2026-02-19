@@ -1,0 +1,14 @@
+unsloth
+torch>=2.3.0
+transformers>=4.41.0
+datasets
+peft
+trl
+accelerate
+bitsandbytes
+fastapi
+uvicorn[standard]
+pyyaml
+requests
+sentencepiece
+protobuf

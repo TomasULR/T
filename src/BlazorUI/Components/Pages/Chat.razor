@@ -1,0 +1,151 @@
+@page "/chat"
+@using BlazorUI.Services
+@inject RagApiClient Api
+@rendermode InteractiveServer
+
+<PageTitle>Chat</PageTitle>
+
+<div class="container-fluid h-100">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="d-flex flex-column" style="height: calc(100vh - 100px);">
+
+                <div class="d-flex justify-content-between align-items-center py-3">
+                    <h4 class="mb-0">Znalostní asistent</h4>
+                    <button class="btn btn-outline-secondary btn-sm" @onclick="IngestDocuments" disabled="@_ingesting">
+                        @if (_ingesting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                        }
+                        Načíst dokumenty
+                    </button>
+                </div>
+
+                @if (!string.IsNullOrEmpty(_ingestMessage))
+                {
+                    <div class="alert alert-info alert-dismissible py-2">
+                        @_ingestMessage
+                        <button type="button" class="btn-close" @onclick="() => _ingestMessage = null"></button>
+                    </div>
+                }
+
+                <div class="flex-grow-1 overflow-auto border rounded p-3 mb-3 bg-light" @ref="_chatContainer">
+                    @if (_messages.Count == 0)
+                    {
+                        <div class="text-center text-muted mt-5">
+                            <p>Položte otázku ohledně vašich dokumentů.</p>
+                            <p class="small">Nejprve načtěte dokumenty tlačítkem výše.</p>
+                        </div>
+                    }
+
+                    @foreach (var msg in _messages)
+                    {
+                        <div class="mb-3 @(msg.IsUser ? "text-end" : "")">
+                            <div class="d-inline-block p-2 px-3 rounded-3 @(msg.IsUser ? "bg-primary text-white" : "bg-white border")"
+                                 style="max-width: 80%; text-align: left; white-space: pre-wrap;">
+                                @msg.Text
+                            </div>
+                            @if (!msg.IsUser && msg.Sources.Count > 0)
+                            {
+                                <div class="small text-muted mt-1">
+                                    Zdroje: @string.Join(", ", msg.Sources)
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (_isLoading)
+                    {
+                        <div class="mb-3">
+                            <div class="d-inline-block p-2 px-3 rounded-3 bg-white border">
+                                <span class="spinner-grow spinner-grow-sm me-1"></span> Přemýšlím...
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Napište otázku..."
+                           @bind="_currentMessage" @bind:event="oninput"
+                           @onkeydown="HandleKeyDown" disabled="@_isLoading" />
+                    <button class="btn btn-primary" @onclick="SendMessage" disabled="@(_isLoading || string.IsNullOrWhiteSpace(_currentMessage))">
+                        Odeslat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private readonly List<ChatMessage> _messages = [];
+    private string _currentMessage = "";
+    private bool _isLoading;
+    private bool _ingesting;
+    private string? _ingestMessage;
+    private ElementReference _chatContainer;
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(_currentMessage)) return;
+
+        var question = _currentMessage;
+        _currentMessage = "";
+        _messages.Add(new ChatMessage(question, true));
+        _isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var response = await Api.AskAsync(question);
+            if (response is not null)
+            {
+                _messages.Add(new ChatMessage(response.Answer, false, response.Sources));
+            }
+        }
+        catch (Exception ex)
+        {
+            _messages.Add(new ChatMessage($"Chyba: {ex.Message}", false));
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleKeyDown(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !_isLoading)
+        {
+            await SendMessage();
+        }
+    }
+
+    private async Task IngestDocuments()
+    {
+        _ingesting = true;
+        _ingestMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            var result = await Api.IngestAsync();
+            _ingestMessage = $"Dokumenty úspěšně načteny: {result}";
+        }
+        catch (Exception ex)
+        {
+            _ingestMessage = $"Chyba při načítání: {ex.Message}";
+        }
+        finally
+        {
+            _ingesting = false;
+            StateHasChanged();
+        }
+    }
+
+    private record ChatMessage(string Text, bool IsUser, List<string>? Sources = null)
+    {
+        public List<string> Sources { get; } = Sources ?? [];
+    }
+}

@@ -1,0 +1,100 @@
+services:
+  # Ollama - LLM server s GPU
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - models_shared:/models:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # Qdrant - vector databáze
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  # RAG Service - backend pro zpracování dokumentů a dotazů
+  rag-service:
+    build:
+      context: ./src/RagService
+    container_name: rag-service
+    ports:
+      - "5100:8080"
+    environment:
+      - Ollama__Url=http://ollama:11434
+      - Qdrant__Host=qdrant
+      - Qdrant__GrpcPort=6334
+      - Ollama__ChatModel=gemma2:9b-instruct-q3_K_M
+      - Ollama__EmbeddingModel=nomic-embed-text
+      - Ollama__FineTunedModel=gemma2-finetuned
+      - Documents__Path=/app/documents
+      - FineTuneService__Url=http://finetune-service:8090
+    volumes:
+      - ./documents:/app/documents:ro
+    depends_on:
+      - ollama
+      - qdrant
+    restart: unless-stopped
+
+  # Blazor UI - webové rozhraní
+  blazor-ui:
+    build:
+      context: ./src/BlazorUI
+    container_name: blazor-ui
+    ports:
+      - "8080:8080"
+    environment:
+      - RagService__Url=http://rag-service:8080
+    depends_on:
+      - rag-service
+    restart: unless-stopped
+
+  # Fine-tuning service - Python pipeline pro QLoRA trénink
+  finetune-service:
+    build:
+      context: ./src/FineTuneService
+    container_name: finetune-service
+    ports:
+      - "8090:8090"
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - GENERATION_MODEL=gemma2:9b-instruct-q3_K_M
+      - FINETUNED_MODEL_NAME=gemma2-finetuned
+      - HF_HOME=/app/hf_cache
+    volumes:
+      - ./documents:/app/documents:ro
+      - ./training_data:/app/training_data
+      - ./models:/app/models
+      - models_shared:/models
+      - hf_cache:/app/hf_cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - ollama
+    restart: "no"
+
+volumes:
+  ollama_data:
+  qdrant_data:
+  models_shared:
+  hf_cache:

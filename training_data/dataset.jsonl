@@ -1,0 +1,8 @@
+{"instruction": "Jaké formáty dokumentů jsou podporovány?", "input": "", "output": ".txt, .md, .pdf, .docx, .csv"}
+{"instruction": "Co se děje po vložení souborů do složky?", "input": "", "output": "Soubory budou rozřezány na chunky, převedeny na vektory a uloženy do Qdrant."}
+{"instruction": "Jak spustit indexaci dokumentů?", "input": "", "output": "Spusťte příkaz `POST /api/ingest`"}
+{"instruction": "Co se stane s dokumenty před vložením do Qdrantu?", "input": "", "output": "Soubory budou rozřezány na chunky a převedeny na vektory."}
+{"instruction": "Jaká je standardní pracovní doba?", "input": "", "output": "Standardní pracovní doba je od 8:00 do 16:30, s půlhodinovou pauzou na oběd."}
+{"instruction": "Kolik dnů dovolené má každý zaměstnanec ročně?", "input": "", "output": "Každý zaměstnanec má nárok na 25 dnů dovolené ročně."}
+{"instruction": "Jak dlouho trvá vyřízení reklamace?", "input": "", "output": "Lhůta pro vyřízení reklamace je 30 kalendářních dnů."}
+{"instruction": "Kdy je možné vrátit zboží bez udání důvodu?", "input": "", "output": "Vrácení zboží bez udání důvodu je možné do 14 dnů od převzetí."}

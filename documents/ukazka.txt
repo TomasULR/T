@@ -1,0 +1,23 @@
+Firemní pravidla a postupy
+
+1. Pracovní doba
+Standardní pracovní doba je od 8:00 do 16:30, s půlhodinovou pauzou na oběd.
+Flexibilní pracovní doba je možná po dohodě s přímým nadřízeným.
+Práce z domova je povolena maximálně 2 dny v týdnu.
+
+2. Dovolená
+Každý zaměstnanec má nárok na 25 dnů dovolené ročně.
+Dovolenou je nutné nahlásit minimálně 2 týdny předem.
+V období od 15. prosince do 5. ledna je preferováno čerpání dovolené.
+
+3. Reklamace a vrácení zboží
+Záruční doba na všechny produkty činí 24 měsíců od data zakoupení.
+Reklamaci lze podat osobně na pobočce nebo elektronicky přes zákaznický portál.
+Lhůta pro vyřízení reklamace je 30 kalendářních dnů.
+Vrácení zboží bez udání důvodu je možné do 14 dnů od převzetí.
+
+4. IT podpora
+Helpdesk je dostupný v pracovní dny od 7:00 do 18:00.
+Kontakt: helpdesk@firma.cz nebo linka 1234.
+Heslo je nutné měnit každých 90 dnů.
+Minimální délka hesla je 12 znaků včetně velkého písmene, čísla a speciálního znaku.

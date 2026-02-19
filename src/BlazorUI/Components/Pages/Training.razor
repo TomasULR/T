@@ -1,0 +1,232 @@
+@page "/training"
+@using BlazorUI.Services
+@inject RagApiClient Api
+@rendermode InteractiveServer
+@implements IDisposable
+
+<PageTitle>Fine-tuning</PageTitle>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h3 class="mb-4">Fine-tuning modelu</h3>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Pipeline</h5>
+                    <p class="text-muted">
+                        Automaticky vygeneruje trénovací data z dokumentů (přes Gemma 2 9B),
+                        dotrénuje Gemma 2 2B pomocí QLoRA a importuje výsledný model do Ollama.
+                    </p>
+
+                    <div class="d-flex gap-2 mb-3">
+                        <button class="btn btn-primary" @onclick="StartTraining"
+                                disabled="@IsTrainingActive">
+                            Spustit fine-tuning
+                        </button>
+                        <button class="btn btn-outline-secondary" @onclick="RefreshStatus">
+                            Obnovit stav
+                        </button>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(_startMessage))
+                    {
+                        <div class="alert alert-info py-2">@_startMessage</div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Stav tréninku</h5>
+
+                    <!-- Pipeline kroky -->
+                    <div class="list-group mb-3">
+                        @foreach (var step in _pipelineSteps)
+                        {
+                            var badgeClass = GetStepBadgeClass(step.State);
+                            var icon = GetStepIcon(step.State);
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="me-2">@icon</span>
+                                    @step.Label
+                                </div>
+                                <span class="badge @badgeClass">@step.StatusText</span>
+                            </div>
+                        }
+                    </div>
+
+                    @if (_status is not null)
+                    {
+                        <div class="mb-2">
+                            <strong>Aktuální stav:</strong>
+                            <span class="ms-2 @(_status.State == "error" ? "text-danger" : "text-primary")">
+                                @_status.Message
+                            </span>
+                        </div>
+
+                        @if (_status.State == "error" && !string.IsNullOrEmpty(_status.Error))
+                        {
+                            <div class="alert alert-danger mt-2">
+                                <strong>Chyba:</strong> @_status.Error
+                            </div>
+                        }
+
+                        @if (_status.State == "done")
+                        {
+                            <div class="alert alert-success mt-2">
+                                Model <strong>gemma2-finetuned</strong> je připraven k použití v chatu.
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Žádný trénink neprobíhá.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Postup</h5>
+                    <ol>
+                        <li>Vložte dokumenty do složky <code>documents/</code></li>
+                        <li>Klikněte <strong>Spustit fine-tuning</strong></li>
+                        <li>Pipeline automaticky:
+                            <ul>
+                                <li>Vygeneruje Q&A páry z dokumentů (přes Gemma 2 9B)</li>
+                                <li>Dotrénuje Gemma 2 2B pomocí QLoRA</li>
+                                <li>Exportuje model do GGUF</li>
+                                <li>Importuje do Ollama jako <code>gemma2-finetuned</code></li>
+                            </ul>
+                        </li>
+                        <li>Použijte dotrénovaný model v chatu</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private TrainingStatusResponse? _status;
+    private string? _startMessage;
+    private Timer? _pollTimer;
+
+    private bool IsTrainingActive => _status?.State is "preparing_data" or "training" or "exporting" or "importing" or "starting";
+
+    private readonly PipelineStep[] _pipelineSteps =
+    [
+        new("preparing_data", "Generování trénovacích dat"),
+        new("training", "QLoRA trénink (Gemma 2 2B)"),
+        new("exporting", "Export do GGUF"),
+        new("importing", "Import do Ollama"),
+    ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshStatus();
+    }
+
+    private async Task StartTraining()
+    {
+        _startMessage = null;
+        try
+        {
+            var result = await Api.StartTrainingAsync();
+            _startMessage = "Fine-tuning spuštěn!";
+            StartPolling();
+        }
+        catch (Exception ex)
+        {
+            _startMessage = $"Chyba: {ex.Message}";
+        }
+    }
+
+    private async Task RefreshStatus()
+    {
+        try
+        {
+            _status = await Api.GetTrainingStatusAsync();
+            if (IsTrainingActive)
+            {
+                StartPolling();
+            }
+            else
+            {
+                StopPolling();
+            }
+        }
+        catch
+        {
+            _status = null;
+        }
+        StateHasChanged();
+    }
+
+    private void StartPolling()
+    {
+        _pollTimer ??= new Timer(async _ =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await RefreshStatus();
+            });
+        }, null, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
+    }
+
+    private void StopPolling()
+    {
+        _pollTimer?.Dispose();
+        _pollTimer = null;
+    }
+
+    private string GetStepBadgeClass(string stepState)
+    {
+        if (_status is null) return "bg-secondary";
+
+        var states = _pipelineSteps.Select(s => s.State).ToList();
+        var currentIdx = states.IndexOf(_status.State);
+        var stepIdx = states.IndexOf(stepState);
+
+        if (_status.State == "done") return "bg-success";
+        if (_status.State == "error" && stepIdx == currentIdx) return "bg-danger";
+        if (stepIdx < currentIdx) return "bg-success";
+        if (stepIdx == currentIdx) return "bg-primary";
+        return "bg-secondary";
+    }
+
+    private string GetStepIcon(string stepState)
+    {
+        var badgeClass = GetStepBadgeClass(stepState);
+        return badgeClass switch
+        {
+            "bg-success" => "✓",
+            "bg-primary" => "⟳",
+            "bg-danger" => "✗",
+            _ => "○"
+        };
+    }
+
+    private string GetStepStatusText(string stepState)
+    {
+        var badgeClass = GetStepBadgeClass(stepState);
+        return badgeClass switch
+        {
+            "bg-success" => "Dokončeno",
+            "bg-primary" => "Probíhá...",
+            "bg-danger" => "Chyba",
+            _ => "Čeká"
+        };
+    }
+
+    public void Dispose()
+    {
+        StopPolling();
+    }
+
+    private record PipelineStep(string State, string Label)
+    {
+        public string StatusText => ""; // Rendered via GetStepStatusText
+    }
+}
