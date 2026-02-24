@@ -1,8 +1,79 @@
-{"instruction": "Jaké formáty dokumentů jsou podporovány?", "input": "", "output": ".txt, .md, .pdf, .docx, .csv"}
-{"instruction": "Co se děje po vložení souborů do složky?", "input": "", "output": "Soubory budou rozřezány na chunky, převedeny na vektory a uloženy do Qdrant."}
-{"instruction": "Jak spustit indexaci dokumentů?", "input": "", "output": "Spusťte příkaz `POST /api/ingest`"}
-{"instruction": "Co se stane s dokumenty před vložením do Qdrantu?", "input": "", "output": "Soubory budou rozřezány na chunky a převedeny na vektory."}
+{"instruction": "Jaké technologie byly použity pro vytvoření aplikace AI Discovery?", "input": "", "output": "ASP.NET Core, Blazor Server a Entity Framework Core."}
+{"instruction": "Co je klíčovou vlastností aplikace AI Discovery?", "input": "", "output": "Synchronizace hodnocení v reálném čase mezi všemi účastníky prostřednictvím knihovny SignalR."}
+{"instruction": "Pro jaké účely byla aplikace AI Discovery vytvořena?", "input": "", "output": "Pro podporu a řízení soutěží projektového dne AiDiscovery na základních a středních školách."}
+{"instruction": "Jaké technologie byly použity pro vývoj aplikace?", "input": "", "output": "Aplikace byla vyvinuta pomocí ASP.NET Core, Blazor Server a Entity Framework Core."}
+{"instruction": "Pro co slouží SignalR v aplikaci?", "input": "", "output": "SignalR umožňuje synchronizaci výsledků v reálném čase mezi všemi účastníky soutěže."}
+{"instruction": "Kde byla aplikace testována?", "input": "", "output": "Aplikace byla úspěšně testována v praxi na několika školách v Plzeňském a Moravskoslezském kraji."}
+{"instruction": "Co je ORM?", "input": "", "output": "ORM (Object-Relational Mapping) slouží k propojení objektů v kódu s relační databází."}
+{"instruction": "Co zajišťuje ASP.NET Core Identity?", "input": "", "output": "ASP.NET Core Identity zajišťuje autentikaci a autorizaci uživatelů v aplikaci."}
+{"instruction": "Jak se nazývá třída pro práci s databází v Entity Framework Core?", "input": "", "output": "DbContext"}
+{"instruction": "Jaké jsou hlavní části aplikace?", "input": "", "output": "Aplikace se skládá z backendu a frontendu."}
+{"instruction": "Co je Entity Framework Core?", "input": "", "output": "Entity Framework Core je implementace pro práci s databází."}
+{"instruction": "Jaký framework se používá pro vývoj frontendu?", "input": "", "output": "Text nenese informaci o použitém frameworku pro front-end."}
+{"instruction": "Jak je strukturována Blazor komponenta?", "input": "", "output": "Struktura Blazor komponenty je popsána v odstavci 2.3.1."}
+{"instruction": "Jakým způsobem se zobrazují výsledky soutěže?", "input": "", "output": "Výsledky soutěže jsou zobrazeny graficky, viz odstavec 2.3.5."}
+{"instruction": "Jaký typ autentizace a autorizace je implementován?", "input": "", "output": "V aplikaci je implementována autentizace a autorizace pomocí Identity, viz odstavec 2.5."}
+{"instruction": "Jak se aplikace nasazuje?", "input": "", "output": "Aplikace se nasazuje pomocí Dockeru, viz odstavec 2.6.1."}
+{"instruction": "Jaký je hlavní cíl této práce?", "input": "", "output": "Hlavním cílem této práce je navrhnout a implementovat robustní webovou aplikaci založenou na moderní technologii Blazor Server pro projektový den AiDiscovery."}
+{"instruction": "Jaké jsou klíčové požadavky na vytvořenou aplikaci?", "input": "", "output": "Aplikace musí umožnit správu soutěží, průběžné bodování v reálném čase a editor skóre pro automatické vypočítávání průměrných hodnot. Musí být flexibilní, intuitivní a testována."}
+{"instruction": "Jaká technologie se používá pro implementaci průběžného bodování v reálném čase?", "input": "", "output": "Pro implementaci průběžného bodování v reálném čase se používá technologie SignalR."}
+{"instruction": "Jaký framework je použit pro tvorbu webového rozhraní aplikace?", "input": "", "output": "Aplikace byla vytvořena pomocí moderního frameworku Blazor od společnosti Microsoft."}
+{"instruction": "Co je Blazor?", "input": "", "output": "Blazor je moderní framework od společnosti Microsoft, který je součástí platformy ASP.NET Core a slouží k tvorbě interaktivních webových rozhraní."}
+{"instruction": "Proč byl pro aplikaci AiDiscovery Pro zvolen Blazor?", "input": "", "output": "Klíčovým faktorem bylo integraci s knihovnou SignalR, která zajišťuje komunikaci v reálném čase a možnost přímé interakce s datovou vrstvou přes Entity Framework Core."}
+{"instruction": "Jaký je princip Dependency Injection?", "input": "", "output": "Princip spočívá v tom, že místo toho, aby si objekt sám vytvářel závislosti, které potřebuje, jsou mu tyto objekty předány zvenčí."}
+{"instruction": "Jaké existují interaktivní varianty Blazoru?", "input": "", "output": "Existují tři interaktivní varianty: Interactive Server, Interactive WebAssembly a Interactive Auto."}
+{"instruction": "Jak probíhá komunikace mezi klientem a serverem v aplikaci AiDiscovery?", "input": "", "output": "Komunikace probíhá pomocí trvalého spojení přes knihovnu SignalR."}
+{"instruction": "Proč byl pro aplikaci AiDiscovery zvolen režim Interactive Server?", "input": "", "output": "Hlavním důvodem je skutečnost, že trvalé spojení SignalR je přímou součástí jeho architektury, což značně usnadňuje implementaci prvků pracujících v reálném čase."}
+{"instruction": "Jaký je hlavní rozdíl mezi režimem Interactive Server a Interactive WebAssembly?", "input": "", "output": "Interactive Server běží na serveru a stahuje se pouze minimum dat, zatímco Interactive WebAssembly se celá zkompiluje a stáhne do prohlížeče."}
+{"instruction": "Co umožňuje SignalR?", "input": "", "output": "SignalR umožňuje serveru aktivně posílat zprávy prohlížečům v reálném čase."}
+{"instruction": "Jaký je účel hubů v aplikaci AiDiscovery?", "input": "", "output": "Huby slouží jako centrální bod pro komunikaci a zajišťují například rozesílání aktualizací skóre všem účastníkům soutěže a oznámení o zahájení nebo ukončení kola."}
+{"instruction": "Jakým způsobem SignalR zajišťuje, aby mentoři viděli pouze relevantní informace?", "input": "", "output": "SignalR umožňuje organizovat připojené klienty do skupin. Každá soutěž má svou vlastní skupinu a zprávy se odesílají pouze mentorům této skupiny."}
+{"instruction": "Jak SignalR řeší problémy s připojením?", "input": "", "output": "SignalR dokáže automaticky řešit problémy s připojením pomocí metody withAutomaticReconnect(). Pokud dojde k přerušení spojení, SignalR se pokusí znovu připojit a uživatel nemusí obnovovat stránku ručně."}
+{"instruction": "Co je ORM a jaký má vliv na práci s daty?", "input": "", "output": "ORM (Object-Relational Mapping) funguje jako překladatel mezi databázovými tabulkami a programovacími objekty. Místo psaní SQL dotazů pracujeme s objekty a kolekcemi přímo v programovacím jazyce, čímž se zvyšuje bezpečnost, produktivita a nezávislost na databázi."}
+{"instruction": "Jak Entity Framework Core zajišťuje integritu dat?", "input": "", "output": "Entity Framework Core používá transakce pro zajištění integrity dat. Transakce seskupí více operací do jedné jednotky, takže se buď všechny provedou úspěšně, nebo žádná."}
+{"instruction": "Jaké databázové technologie se používají v aplikaci AiDiscovery?", "input": "", "output": "V aplikaci AiDiscovery se používá SQLite."}
+{"instruction": "Proč je pro aplikaci postavenou na Blazor Server doporučována factory DbContext?", "input": "", "output": "Standardní DbContext není navržen pro souběžné použití a pokud by v rámci jednoho připojení proběhly dvě operace naráz, aplikace by selhala. Factory vytváří novou, izolovanou instanci DbContext pro každou databázovou operaci, čímž se předchází konfliktům."}
+{"instruction": "Jak je datový model aplikace AiDiscovery strukturován?", "input": "", "output": "Datový model aplikace AiDiscovery je tvořen třemi hlavními entity: Competition (Soutěž), Team (Tým) a Round (Hodnocení kola)."}
+{"instruction": "Co Entity Competition v aplikaci představuje?", "input": "", "output": "Entity Competition představuje jednu instanci investiční hry. Obsahuje konfigurační údaje (název, počet týmů, počet mentorů) a stavové informace."}
+{"instruction": "Jak je strukturováno datové modelo soutěže?", "input": "", "output": "Datové modelo soutěže je založeno na vztahu 1:n, kde jedna soutěž obsahuje více týmů a jeden tým má více kol s hodnocením."}
+{"instruction": "Jak se liší logika výpočtu celkového skóre podle kola?", "input": "", "output": "V prvním kole se hodnotí pouze prezentace a nápad. Ve druhém kole se přidává hodnocení prototypu. Od třetího kola se hodnotí všechny čtyři kategorie včetně týmové práce."}
+{"instruction": "Pro co je v aplikaci AiDiscovery používán ASP.NET Core Identity?", "input": "", "output": "ASP.NET Core Identity je v aplikaci AiDiscovery používán pro ochranu mentorských stránek, které jsou přístupné pouze přihlášeným mentorům."}
+{"instruction": "Jaké jsou základní stavební jednotky uživatelského rozhraní v Blazoru?", "input": "", "output": "Základními stavebními jednotkami uživatelského rozhraní v Blazoru jsou komponenta."}
+{"instruction": "Jaké technologie byly použity pro vývoj aplikace AiDiscovery?", "input": "", "output": ".NET, Blazor Server, SignalR, Entity Framework Core, SQLite, ASP.NET Core Identity a upravený Bootstrap."}
+{"instruction": "Jak komponenty v aplikaci AiDiscovery komunikují mezi sebou?", "input": "", "output": "Pomocí parametrů, událostí a sdílených služeb."}
+{"instruction": "Co zajišťuje služba CompetitionService?", "input": "", "output": "Zajišťuje operace nad soutěžemi, týmy a koly."}
+{"instruction": "Jaký typ databáze používá aplikace AiDiscovery?", "input": "", "output": "SQLite"}
+{"instruction": "Jaké technologie se používají pro komunikaci s databází?", "input": "", "output": "Datová vrstva využívá Entity Framework Core pro komunikaci s SQLite databází."}
+{"instruction": "Jakým způsobem je zajišťována real-time komunikace mezi serverem a klienty?", "input": "", "output": "Real-time komunikační vrstva je implementována pomocí SignalR hubu ScoreHub."}
+{"instruction": "Jaké rozhraní definuje servisní vrstva?", "input": "", "output": "Servisní vrstva je definována rozhraním ICompetitionService, které definuje dostupné operace."}
+{"instruction": "Jaký typ datového typu se používá pro ukládání průměrných hodnot hodnocení?", "input": "", "output": "Datový typ nullable double (double?)"}
+{"instruction": "Jakým způsobem je zajištěno zabezpečení přístupu v aplikaci?", "input": "", "output": "Aplikace integruje ASP.NET Core Identity pro zabezpečení přístupu."}
+{"instruction": "Co dělá databázový kontext CompetitionContext?", "input": "", "output": "CompetitionContext představuje hlavní vstupní bod pro práci s databází a dědí z IdentityDbContext, čímž automaticky získává podporu pro tabulky uživatelů a rolí."}
+{"instruction": "Jak se provádí správa změn ve struktuře databáze během vývoje aplikace?", "input": "", "output": "Databázové migrace jsou mechanismus pro správu změn ve struktuře databáze. Umožňují verzovat schéma databáze podobně, jako zdrojový kód."}
+{"instruction": "Jak se vytváří migrace v Entity Framework Core?", "input": "", "output": "Vytvoříme migraci pomocí příkazu: dotnet ef migrations add NazevMigrace"}
+{"instruction": "Jaké metody nabízí rozhraní ICompetitionService?", "input": "", "output": "Rozhraní ICompetitionService nabízí metody GetCompetitionsAsync, GetCompetitionAsync, CreateCompetitionAsync, DeleteCompetitionAsync, UpdateCurrentRoundAsync, UpdateSpecificScoreAsync a NotifyRoundSavedAsync."}
+{"instruction": "Pro co se používá SignalR Hub implementace ScoreHub?", "input": "", "output": "SignalR Hub implementace ScoreHub slouží pro real-time komunikaci mezi serverem a klienty a správu skupin pro odesílání aktualizací skóre."}
+{"instruction": "Jakým způsobem SignalR minimalizuje síťový provoz?", "input": "", "output": "SignalR využívá cílené adresování, kde se zprávy odesílají pouze připojeným klientom v dané skupině, čímž se minimalizuje síťový provoz."}
+{"instruction": "Jaký typ komponent frontend aplikace používá?", "input": "", "output": "Frontend aplikace používá Blazor Server komponenty s interaktivním renderováním."}
+{"instruction": "Jaké komponenty tvoří aplikaci?", "input": "", "output": "Aplikace se skládá z komponent CompetitionDetails.razor, Scores.razor, MentorVoting.razor a RoundSummary.razor."}
+{"instruction": "Co umožňuje komponenta CompetitionDetails.razor?", "input": "", "output": "Komponenta CompetitionDetails.razor umožňuje spouštět a ukončovat kola, zadávat hodnocení od mentorů a ukládat výsledky."}
+{"instruction": "Jak je zabezpečena aplikace?", "input": "", "output": "Aplikace je zabezpečena pomocí frameworku ASP.NET Core Identity, který poskytuje základ pro správu uživatelských identit."}
+{"instruction": "Jak funguje časovač v aplikaci?", "input": "", "output": "Časovač automaticky řídí průběh kol soutěže pomocí dvou synchronizovaných timerů. Jeden timer zajišťuje přesné ukončení kola po předdefinované délce, druhý aktualizuje zbývající čas v rozhraní."}
+{"instruction": "Jak je zajištěn přístup k stránce s řízením kol?", "input": "", "output": "Přístup k stránce s řízením kol je omezen pomocí direktivy @attribute [Authorize]."}
+{"instruction": "Co se stane, když se na stránku pokusí přistoupit anonymní uživatel?", "input": "", "output": "Komponenta AuthorizeRouteView detekuje stav a zobrazí sekci <NotAuthorized>, která přesměruje uživatele na přihlašovací formulář (/login)."}
+{"instruction": "Jak je konfigurováno heslo pro výchozí uživatele?", "input": "", "output": "Heslo pro výchozí uživatele je nastaveno na \"HESLO\" a požadavky na heslo jsou zjednodušené pro vývoj a testování."}
+{"instruction": "Jak se vytvoří výchozí uživatel mentor při startu aplikace?", "input": "", "output": "Při startu aplikace se automaticky vytvoří výchozí uživatel mentor, pokud ještě neexistuje. Tuto akci provádí kód v Listing 2.5."}
+{"instruction": "Jak spustit aplikaci AiDiscovery?", "input": "", "output": "Aplikaci spustíte příkazem `docker-compose up -d --build`."}
+{"instruction": "Kde najdu výpisy z aplikace AiDiscovery?", "input": "", "output": "Výpisy z aplikace zobrazíte příkazem `docker-compose logs -f`."}
+{"instruction": "Na jakých školách proběhly pilotní nasazení aplikace AiDiscovery?", "input": "", "output": "Pilotní nasazení proběhlo na 26. základní škole v Plzni, 1. základní škole v Plzni, třech bězích na Základní škole Martina Luthera a také na SŠPEI MTA v Ostravě."}
+{"instruction": "Jaké funkce má aplikace AiDiscovery Tutorial?", "input": "", "output": "Aplikace AiDiscovery Tutorial vysvětluje principy promptování, jazykových modelů a počítačové vize."}
+{"instruction": "Jaký byl výsledek pilotních nasazení aplikace?", "input": "", "output": "Pilotní nasazení potvrdila použitelnost aplikace v reálném prostředí a identifikovala místa pro další rozvoj."}
+{"instruction": "Co je mezi budoucími rozšířeními aplikace?", "input": "", "output": "Mezi budoucí rozšíření patří například podpora více typů soutěží a rozšířené statistiky."}
+{"instruction": "Byly splněny všechny stanovené cíle práce?", "input": "", "output": "Ano, byly splněny všechny stanovené cíle práce."}
 {"instruction": "Jaká je standardní pracovní doba?", "input": "", "output": "Standardní pracovní doba je od 8:00 do 16:30, s půlhodinovou pauzou na oběd."}
-{"instruction": "Kolik dnů dovolené má každý zaměstnanec ročně?", "input": "", "output": "Každý zaměstnanec má nárok na 25 dnů dovolené ročně."}
+{"instruction": "Kolik dnů dovolené má každý zaměstnanec nárok ročně?", "input": "", "output": "Každý zaměstnanec má nárok na 25 dnů dovolené ročně."}
 {"instruction": "Jak dlouho trvá vyřízení reklamace?", "input": "", "output": "Lhůta pro vyřízení reklamace je 30 kalendářních dnů."}
-{"instruction": "Kdy je možné vrátit zboží bez udání důvodu?", "input": "", "output": "Vrácení zboží bez udání důvodu je možné do 14 dnů od převzetí."}
+{"instruction": "Kdy je preferováno čerpání dovolené?", "input": "", "output": "V období od 15. prosince do 5. ledna je preferováno čerpání dovolené."}
+{"instruction": "Jaké formáty souborů jsou podporovány pro trénování?", "input": "", "output": "Podporované formáty jsou .txt, .md, .pdf, .docx a .csv."}
+{"instruction": "Co se děje po vložení souborů do složky?", "input": "", "output": "Soubory budou rozřezány na chunky, převedeny na vektory a uloženy do Qdrant."}
+{"instruction": "Jak spustit indexaci souborů?", "input": "", "output": "Spustíte ji pomocí požadavku POST na URL /api/ingest."}
