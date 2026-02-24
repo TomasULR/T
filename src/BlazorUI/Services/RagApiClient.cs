@@ -42,6 +42,13 @@ public class RagApiClient
         }
     }
 
+    public async Task<ChatResponse?> AskFinetunedAsync(string message)
+    {
+        var response = await _http.PostAsJsonAsync("/api/chat/finetuned", new { Message = message });
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ChatResponse>();
+    }
+
     public async Task<string> IngestAsync()
     {
         var response = await _http.PostAsync("/api/ingest", null);

@@ -10,31 +10,15 @@
         <div class="col-lg-8 col-xl-6">
             <div class="d-flex flex-column" style="height: calc(100vh - 100px);">
 
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <h4 class="mb-0">Znalostní asistent</h4>
-                    <button class="btn btn-outline-secondary btn-sm" @onclick="IngestDocuments" disabled="@_ingesting">
-                        @if (_ingesting)
-                        {
-                            <span class="spinner-border spinner-border-sm me-1"></span>
-                        }
-                        Načíst dokumenty
-                    </button>
+                <div class="py-3">
+                    <h4 class="mb-0">AI Asistent <span class="badge bg-success fs-6 align-middle">Fine-tuned</span></h4>
                 </div>
-
-                @if (!string.IsNullOrEmpty(_ingestMessage))
-                {
-                    <div class="alert alert-info alert-dismissible py-2">
-                        @_ingestMessage
-                        <button type="button" class="btn-close" @onclick="() => _ingestMessage = null"></button>
-                    </div>
-                }
 
                 <div class="flex-grow-1 overflow-auto border rounded p-3 mb-3 bg-light" @ref="_chatContainer">
                     @if (_messages.Count == 0)
                     {
                         <div class="text-center text-muted mt-5">
-                            <p>Položte otázku ohledně vašich dokumentů.</p>
-                            <p class="small">Nejprve načtěte dokumenty tlačítkem výše.</p>
+                            <p>Položte otázku — model odpovídá z natrénovaných znalostí.</p>
                         </div>
                     }
 
@@ -45,12 +29,6 @@
                                  style="max-width: 80%; text-align: left; white-space: pre-wrap;">
                                 @msg.Text
                             </div>
-                            @if (!msg.IsUser && msg.Sources.Count > 0)
-                            {
-                                <div class="small text-muted mt-1">
-                                    Zdroje: @string.Join(", ", msg.Sources)
-                                </div>
-                            }
                         </div>
                     }
 
@@ -81,8 +59,6 @@
     private readonly List<ChatMessage> _messages = [];
     private string _currentMessage = "";
     private bool _isLoading;
-    private bool _ingesting;
-    private string? _ingestMessage;
     private ElementReference _chatContainer;
 
     private async Task SendMessage()
@@ -97,10 +73,10 @@
 
         try
         {
-            var response = await Api.AskAsync(question);
+            var response = await Api.AskFinetunedAsync(question);
             if (response is not null)
             {
-                _messages.Add(new ChatMessage(response.Answer, false, response.Sources));
+                _messages.Add(new ChatMessage(response.Answer, false));
             }
         }
         catch (Exception ex)
@@ -122,30 +98,5 @@
         }
     }
 
-    private async Task IngestDocuments()
-    {
-        _ingesting = true;
-        _ingestMessage = null;
-        StateHasChanged();
-
-        try
-        {
-            var result = await Api.IngestAsync();
-            _ingestMessage = $"Dokumenty úspěšně načteny: {result}";
-        }
-        catch (Exception ex)
-        {
-            _ingestMessage = $"Chyba při načítání: {ex.Message}";
-        }
-        finally
-        {
-            _ingesting = false;
-            StateHasChanged();
-        }
-    }
-
-    private record ChatMessage(string Text, bool IsUser, List<string>? Sources = null)
-    {
-        public List<string> Sources { get; } = Sources ?? [];
-    }
+    private record ChatMessage(string Text, bool IsUser);
 }

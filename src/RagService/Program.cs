@@ -14,6 +14,7 @@ var chatModel = builder.Configuration["Ollama:ChatModel"] ?? "gemma2:9b-instruct
 var embeddingModel = builder.Configuration["Ollama:EmbeddingModel"] ?? "nomic-embed-text";
 var documentsPath = builder.Configuration["Documents:Path"] ?? "/app/documents";
 var fineTuneUrl = builder.Configuration["FineTuneService:Url"] ?? "http://finetune-service:8090";
+var finetunedModel = builder.Configuration["Ollama:FinetunedModel"] ?? "gemma2-finetuned";
 
 builder.Services.AddKernel()
     .AddOllamaChatCompletion(chatModel, new Uri(ollamaUrl))
@@ -24,6 +25,11 @@ builder.Services.AddSingleton<DocumentParser>();
 builder.Services.AddSingleton<TextChunker>();
 builder.Services.AddSingleton<VectorStoreService>();
 builder.Services.AddSingleton<RagChatService>();
+builder.Services.AddSingleton(_ =>
+{
+    var http = new HttpClient { BaseAddress = new Uri(ollamaUrl), Timeout = TimeSpan.FromMinutes(5) };
+    return new FineTunedChatService(http, finetunedModel);
+});
 
 builder.Services.AddHttpClient("FineTuneService", client =>
 {
@@ -89,6 +95,26 @@ app.MapPost("/api/ingest", async (
     }
 
     return Results.Ok(new IngestResponse(files.Count, totalChunks));
+});
+
+// Finetuned model chat endpoint (no RAG)
+app.MapPost("/api/chat/finetuned", async (ChatRequest request, FineTunedChatService chatService) =>
+{
+    var response = await chatService.AskAsync(request.Message);
+    return Results.Ok(response);
+});
+
+app.MapPost("/api/chat/finetuned/stream", (ChatRequest request, FineTunedChatService chatService) =>
+{
+    return Results.Stream(async stream =>
+    {
+        var writer = new StreamWriter(stream);
+        await foreach (var chunk in chatService.AskStreamAsync(request.Message))
+        {
+            await writer.WriteAsync(chunk);
+            await writer.FlushAsync();
+        }
+    }, "text/plain");
 });
 
 // Training proxy endpoints
